@@ -1,17 +1,24 @@
 import java.io.*;
+import java.util.*;
+import java.util.Scanner;
+
 
 public class Student {
+    Scanner scan = new Scanner(System.in);
     /*  4 categories for input are "quizzes" , "exams", "homework ","project"
-    * total is to the calculate the 4 categories
+     * total is to the calculate the 4 categories
      */
     private String name;
-    private int quizzes;
-    private int exams;
-    private int homework;
-    private int project;
     private double total;
+    private ArrayList<Integer> quizzes = new ArrayList<>();
+    private ArrayList<Integer> exams = new ArrayList<>();
+    private ArrayList<Integer> homework = new ArrayList<>();
+    private ArrayList<Integer> project = new ArrayList<>();
     private File gradeBook = new File("gradeBook.txt");
     private BufferedWriter writer;
+    private Map<String, Integer> grades = new HashMap<>();
+    private ArrayList<String> courses = new ArrayList<>();
+
 
 
     private double quizWeight = 0.20;
@@ -19,18 +26,24 @@ public class Student {
     private double homeworkWeight = 0.25;
     private double projectWeight = 0.25;
 
-    /**
-     * these percentages are made for the categories
-     * @return results
-     */
 
+    /**
+     * Assign grade category
+     * @param name
+     */
 
     Student(String name) {
         this.name = name;
-        /**
-         * @returm name
-         */
+        grades.put("quizzes", 0);
+        grades.put("exams", 0);
+        grades.put("homework", 0);
+        grades.put("projects", 0);
     }
+
+    /**
+     * Returns the students name from grade book
+     * @return
+     */
 
     public String getName() {
         /** set get to get students name
@@ -39,59 +52,126 @@ public class Student {
         return name;
     }
 
-    public int getQuiz() {
-        /**
-         * @return quizzes
-         */
+
+    /**
+     * inputs that were inputted in the arraylist is going to show
+     * @return quizzes
+     */
+    public ArrayList<Integer> getQuiz() {
+        int grade = 0;
+        ArrayList<Integer> grades = new ArrayList<>();
+        while(grade > 0){
+            System.out.print("Enter quiz");
+            grade = scan.nextInt();
+            scan.nextLine();
+            if(grade > 0){
+                grades.add( grade);
+            }
+
+        }
+
         return quizzes;
     }
 
-    public int getExam() {
-        /**
-         * @return exams
-         */
+    /**
+     * Getter to get back input for exams
+     * @return exams
+     */
+
+    public ArrayList<Integer> getExam() {
+        int grade = 0;
+        ArrayList<Integer> grades = new ArrayList<>();
+        while(grade > 0){
+            System.out.print("Enter exam");
+            grade = scan.nextInt();
+            scan.nextLine();
+            if(grade > 0){
+                grades.add(grade);
+            }
+
+        }
+
         return exams;
     }
 
-    public int getHomework() {
-        /**
-         * @homework
-         */
+    /**
+     *get back the input from the private class for exams
+     * @return exams
+     */
+
+    public ArrayList<Integer> getHomework() {
+        int grade = 0 ;
+        ArrayList<Integer> grades = new ArrayList<>();
+        while(grade > 0){
+            System.out.print("Enter homework");
+            grade = scan.nextInt();
+            scan.nextLine();
+            if(grade > 0){
+                grades.add( grade);
+            }
+
+        }
         return homework;
     }
 
-    public int getProject() {
-        /**
-         * @return project
-         */
+    /**
+     * get back the input from the private class for homework
+     * @return homework
+     */
+
+    public ArrayList<Integer> getProject() {
+
+        int grade = 0;
+        ArrayList<Integer> grades = new ArrayList<>();
+        while(grade > 0){
+            System.out.print("Enter quiz");
+            grade = scan.nextInt();
+            scan.nextLine();
+            if(grade > 0){
+                grades.add( grade);
+            }
+
+        }
         return project;
     }
-
-    public double getTotal(){return total;}
-
-    public void setQuiz(int grade) {
-        quizzes = grade;
+    public ArrayList<String> getCourses(){
+        return courses;
     }
 
-    public void setExam(int grade) {
-        exams = grade;
+    public double getTotal() {
+     return grades.get("total");
     }
 
-    public void setHomework(int grade) {
-        homework = grade;
+    public void addQuiz(int grade) {
+        quizzes.add(grade);
+        grades.put("quizzes", grades.get("quizzes") + grade);
     }
 
-    public void setProject(int grade) {
-        project = grade;
+    public void addExam(int grade) {
+        exams.add(grade);
+        grades.put("exams", grades.get("exams") + grade);
     }
 
-    public void calculateGrade(){
-        total = (((quizzes / 100.0) * quizWeight)) + (((exams / 100.0) * examWeight)) + (((homework / 100.0) * homeworkWeight))
-        + (((project / 100.0) * projectWeight));
+    public void addHomework(int grade) {
+        homework.add(grade);
+        grades.put("homework", grades.get("homework") + grade);
+    }
+
+
+    public void addProject(int grade) {
+        project.add(grade);
+        grades.put("projects", grades.get("projects") + grade);
+    }
+
+
+
+    public void calculateGrade() {
+        int quiz = 0;
+        total =  quizzes.get(quiz);
         total = total * 100.0;
     }
 
-    public void createGradeBook(){
+    public void createGradeBook() {
         if (gradeBook.exists()) {
             gradeBook.delete();
         }
@@ -109,16 +189,14 @@ public class Student {
         }
     }
 
+
     public void recordGrades() {
-        String report = "Quizzes: " + getQuiz() + "\nExams: " + getExam() + "\nHomework: "
-                + getHomework() + "\nProject: " + getProject() + "\nOverall Grade: "
-                + String.format("%.2f", getTotal());
         /**
          * show the values to the grade
          * @param get the grades and the weights of it
          */
         try {
-            writer.write(report);
+            writer.write(toString());
             writer.flush();
         } catch (IOException e) {
             // Print exception if cannot write to file
@@ -127,11 +205,22 @@ public class Student {
 
     }
 
+    public String toString(){
+
+        /**Inherits properties of toString
+         * @return  report the calculations of the category with the weights of each category
+         */
+        String report = "Quizzes: " + getQuiz() + "\nExams: " + getExam() + "\nHomework: "
+                + getHomework() + "\nProject: " + getProject() + "\nOverall Grade: "
+                + String.format("%.2f", getTotal());
+        return report;
+    }
+
     public void closeGradeBook() throws IOException {
         writer.close();
     }
 
-    public void readGrades(){
+    public void readGrades() {
         try {
             FileReader reader = new FileReader(gradeBook);
             BufferedReader bReader = new BufferedReader(reader);
@@ -152,4 +241,9 @@ public class Student {
             System.out.println("Problem reading file: " + e.getStackTrace());
         }
     }
+
+    public void addClasses(ArrayList<String> courses) {
+    }
 }
+
+
